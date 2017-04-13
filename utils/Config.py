@@ -8,6 +8,8 @@ class Config:
         f = open(path, encoding='utf-8')
         settings = json.load(f)
         self.database = settings['database']
+        self.pool_size = self.database['pool_size']
+        self.max_overflow = self.database['max_overflow']
 
 
 if __name__ == '__main__':

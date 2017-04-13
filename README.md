@@ -19,4 +19,21 @@ python setup.py install
 cp config.json.default config.json
 ```
 
-Edit `config.json` 
+Edit `config.json`
+ 
+ 
+##5. Flask
+- [Flask框架](https://www.sqlalchemy.org/)
+
+- 关于Jinja2模板引擎
+
+- [关于WSGI/uWSGI](http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386832689740b04430a98f614b6da89da2157ea3efe2000)
+
+
+##6. ORM框架:SQLAlchemy
+[SQLAlchemy文档](https://www.sqlalchemy.org/)
+
+##7. 插件flask_login
+[flask_login文档](http://flask-login.readthedocs.io/en/latest/)
+
+##8. fl

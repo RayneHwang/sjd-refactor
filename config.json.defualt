@@ -1,3 +1,7 @@
 {
-   "database":""
+  "database": {
+    "url": "mysql+mysqlconnector://<username>:<pwd>@<host>:<port>/<db_name>",
+    "pool_size": 20,
+    "max_overflow": 0
+  }
 }
