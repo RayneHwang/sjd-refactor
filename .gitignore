@@ -1,3 +1,4 @@
 config.json
 /.idea
 /flask_env
+/flask-env
