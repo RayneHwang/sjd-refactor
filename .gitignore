@@ -2,3 +2,5 @@ config.json
 /.idea
 /flask_env
 /flask-env
+*.pyc
+/__pycache__
