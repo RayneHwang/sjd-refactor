@@ -37,9 +37,9 @@ def jsonres():
 
     except NoResultFound:
         return return_json(error.NoResErr().toDict())
-    # finally:
+    finally:
         # dbsession.commit()
-        # dbsession.close()
+        dbsession.close()
     # print('closing session')
     # dbsession.close()
     return return_json(user)

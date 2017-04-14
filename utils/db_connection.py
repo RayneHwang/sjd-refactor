@@ -10,7 +10,7 @@ engine = create_engine(databaseconfig['url'],
                        max_overflow=0,
                        echo=True,
                        echo_pool=True,
-                       pool_timeout=10,
+                       pool_timeout=3,
                        pool_recycle=200
                        # pool_pre_ping=True
                        )
