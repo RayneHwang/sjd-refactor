@@ -32,3 +32,13 @@ def __obj_to_json(obj):
 def return_json(obj):
     """return obj as"""
     return Response(__obj_to_json(obj), mimetype='application/json')
+
+
+def error_json(msg):
+    resp = {'status': 1, 'msg': msg}
+    return Response(__obj_to_json(resp), mimetype='application/json')
+
+
+def succ_json():
+    resp = {'status': 0, 'msg': ''}
+    return Response(__obj_to_json(resp), mimetype='application/json')
