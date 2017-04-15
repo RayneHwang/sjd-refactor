@@ -1,12 +1,13 @@
 from models.SJD_USER import SjdUser
 from utils.db_connection import get_session
+from utils.password_encode import encode
 
 
 def register(args):
     """
     用户注册服务
     :param args: 包含所有注册需要的信息的dict 
-    :return: 
+    :return: 成功注册返回0, 否则返回错误信息
     """
     for attr in ['username', 'password', 'mobile', 'type', 'major', 'department', 'student_id', 'reg_ip',
                  'last_login_ip', 'school']:
@@ -14,7 +15,7 @@ def register(args):
             return '<%s> cannot be null' % attr
 
     user = SjdUser(username=args['username'],
-                   password=args['password'],
+                   password=encode(args['password']),
                    mobile=args['mobile'],
                    type=args['type'],
                    major=args['major'],
@@ -27,4 +28,5 @@ def register(args):
     db_session = get_session()
     db_session.add(user)
     db_session.commit()
+    db_session.close()
     return 0

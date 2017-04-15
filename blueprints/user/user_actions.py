@@ -1,10 +1,9 @@
 from flask import Blueprint, session, request
 
-from models.SJD_USER import SjdUser
-from utils.return_json import error_json, succ_json
-from utils.db_connection import get_session
-from utils.password_encode import encode
 from blueprints.user.services import register_service, login_service
+from models.SJD_USER import SjdUser
+from utils.db_connection import get_session
+from utils.return_json import error_json, succ_json
 
 # Lei, HUANG: 17:41 15/04/2017
 # Flask defualt session implementation is client-side session
@@ -22,12 +21,12 @@ def login():
         password = request.form['password']
 
         res = login_service.login(username, password)
-        
+
         if res == 0:
             session['username'] = username
             return succ_json()
         else:
-            return error_json(res)
+            return error_json(res[0], res[1])
     else:
         return '''
         <form action="" method="POST">
@@ -48,13 +47,15 @@ def register():
     if res == 0:
         return succ_json()
     else:
-        return error_json(res)
+        return error_json('', res)
 
 
 @user_module.route('/status')
 def status():
     if 'username' in session:
-        user = get_session().query(SjdUser).filter(SjdUser.username == session['username']).one()
+        db_session = get_session()
+        user = db_session.query(SjdUser).filter(SjdUser.username == session['username']).one()
+        db_session.close()
         print(user)
         return 'you are login in as %s' % user.realname
     else:
