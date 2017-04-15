@@ -1,13 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import SingletonThreadPool
 
 from utils.Config import Config
 
 databaseconfig = Config('./config.json').database
 engine = create_engine(databaseconfig['url'],
-                       pool_size=2,
-                       max_overflow=0,
+                       pool_size=databaseconfig['pool_size'],
+                       max_overflow=databaseconfig['max_overflow'],
                        echo=True,
                        echo_pool=True,
                        pool_timeout=3,
@@ -19,5 +18,7 @@ db_session_factory = sessionmaker(bind=engine)
 
 
 def get_session():
+    """获取一个session实例, 完成操作后务必关闭"""
     session = db_session_factory()
     return session
+

@@ -1,12 +1,10 @@
 from flask import Blueprint, render_template, request
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 
 from models.SJD_UCENTER_MEMBER import SjdUcenterMember
 from utils import error
-from utils.db_connection import engine
-from utils.return_json import return_json
 from utils.db_connection import get_session
+from utils.return_json import return_json
 
 admin = Blueprint('admin', __name__, template_folder='templates')
 
@@ -23,7 +21,6 @@ def show(page):
 
 @admin.route('/json/')
 def jsonres():
-    # TODO http://docs.sqlalchemy.org/en/latest/orm/session_basics.html#what-does-the-session-do
     userid = request.args.get('userid')
 
     dbsession = get_session()
@@ -38,8 +35,6 @@ def jsonres():
     except NoResultFound:
         return return_json(error.NoResErr().toDict())
     finally:
-        # dbsession.commit()
+        # 一定要记得关闭session, 否则有会导致连接池溢出
         dbsession.close()
-    # print('closing session')
-    # dbsession.close()
     return return_json(user)
