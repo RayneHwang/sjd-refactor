@@ -4,3 +4,4 @@ config.json
 /flask-env
 *.pyc
 /__pycache__
+*.swp
