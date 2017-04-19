@@ -12,4 +12,4 @@ def encode(str):
 
 
 if __name__ == '__main__':
-    print(encode('123456'))
+    assert '49ba59abbe56e057' == encode('123456')
