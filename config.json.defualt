@@ -1,9 +1,0 @@
-{
-  "app_secret": "A0Zr98j/3yX R~XHH!jmN]LWX/,?RT",
-  "database": {
-    "url": "mysql+mysqlconnector://<username>:<pwd>@<host>:<port>/<db_name>",
-    "pool_size": 20,
-    "max_overflow": 0
-  }
-  "redis": "TdFC2^zjRlZ&Z2vVfC"
-}

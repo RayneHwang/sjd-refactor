@@ -7,7 +7,7 @@ from flask import Flask
 
 from blueprints.admin import admin
 from blueprints.user import user_actions
-from utils.Config import get_config
+from utils.config import get_config
 
 app = Flask(__name__)
 app.config['EXPLAIN_TEMPLATE_LOADING'] = True

@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
-from utils.Config import get_config
+from utils.config import get_config
 
 databaseconfig = get_config()['database']
 
