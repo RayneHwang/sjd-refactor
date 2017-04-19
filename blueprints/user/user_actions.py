@@ -1,4 +1,6 @@
 import random
+
+import logging
 from flask import Blueprint, session, request
 
 from blueprints.user.services import register_service, login_service
@@ -79,8 +81,8 @@ def bm():
     try:
         user = db_session.query(SjdUser).filter(SjdUser.id == userid).one()
         print(user)
-    except Exception:
-        pass
+    except Exception as e:
+        logging.exception(e)
     finally:
         pass
         db_session.close()

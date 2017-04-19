@@ -1,6 +1,5 @@
+import logging
 import smtplib
-import traceback
-
 from email.mime.text import MIMEText
 
 from utils.config import get_config
@@ -26,11 +25,11 @@ def send_mail(to_list, sub, content):
         server.sendmail(me, to_list, msg.as_string())
         server.close()
         return True
-    except Exception:
-        print(traceback.format_exc())
+    except Exception as e:
+        logging.exception(e)
+        # print(traceback.format_exc())
         return False
 
 
 if __name__ == '__main__':
-    print(mail_config)
     send_mail(['714582494@qq.com'], 'vim 8.0', 'This is a test email sent by python smtp client')
