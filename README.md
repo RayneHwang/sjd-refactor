@@ -39,10 +39,10 @@ python setup.py install
 ```
 ## 4. 数据库配置
 ```
-cp config.json.default config.json
+cp config.default.json config.json
 ```
 
-Edit `config.json`
+编辑`config.json`文件，将其中的配置改为自己的配置
 
  
 ##  5. 启动
