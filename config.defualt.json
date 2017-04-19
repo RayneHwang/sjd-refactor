@@ -3,14 +3,18 @@
   "database": {
     "url": "mysql+mysqlconnector://<username>:<pwd>@<host>:<port>/<db_name>",
     "pool_size": 20,
-    "max_overflow": 0
-  }
+    "max_overflow": 0,
+    "pool_timeout": 10,
+    "pool_recycle": 20,
+    "echo": true,
+    "echo_pool": true
+  },
   "redis": "TdFC2^zjRlZ&Z2vVfC",
-   "mail": {
-      "MAIL_USER": "<EMAIL_USER>",
-      "MAIL_POSTFIX": "<EMAIL_POSTFIX>",
-      "MAIL_PWD": "<EMAIL_PASSWORD>",
-      "MAIL_SERVER": "<EMAIL_SMTP_SERVER>",
-      "MAIL_FROM": "<EMAIL_NAME>"
-    }
+  "mail": {
+    "MAIL_USER": "<EMAIL_USER>",
+    "MAIL_POSTFIX": "<EMAIL_POSTFIX>",
+    "MAIL_PWD": "<EMAIL_PASSWORD>",
+    "MAIL_SERVER": "<EMAIL_SMTP_SERVER>",
+    "MAIL_FROM": "<EMAIL_NAME>"
+  }
 }
