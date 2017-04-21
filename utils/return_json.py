@@ -39,6 +39,6 @@ def error_json(code, msg):
     return Response(__obj_to_json(resp), mimetype='application/json')
 
 
-def succ_json():
-    resp = {'status': 0, 'msg': ''}
+def succ_json(msg=""):
+    resp = {'status': 0, 'msg': msg}
     return Response(__obj_to_json(resp), mimetype='application/json')

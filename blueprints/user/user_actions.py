@@ -102,7 +102,35 @@ def db_status():
 
 @user_module.route('/send_verify', methods=['POST'])
 def send_verify():
-    mobile = request.form['mobile']
+    """
+    Lei, HUANG: 21:55 21/04/2017
+    发送验证码
+    :return: 
+    """
+    mobile = request.form.get('mobile')
+    if mobile is None:
+        return error_json(1, '手机号码不能为空')
+    flag, msg = register_service.send_verify(mobile)
+    if flag:
+        return succ_json()
+    else:
+        return error_json(1, msg)
 
-    res = register_service.send_verify(mobile)
-    return error_json(0, res)
+
+@user_module.route('/check_verify', methods=['POST'])
+def check_verify():
+    """
+    Lei, HUANG: 21:54 21/04/2017
+    检验用户输入的验证码是否有效
+    :return: 
+    """
+    mobile = request.form.get('mobile')
+    verify_code = request.form.get('verify_code')
+    if mobile is None or verify_code is None:
+        return error_json(1, '手机号码或验证码不能为空')
+    else:
+        flag = register_service.check_verify(mobile, verify_code)
+        if flag:
+            return succ_json()
+        else:
+            return error_json(1, '验证码输入错误')
