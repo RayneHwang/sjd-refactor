@@ -8,7 +8,7 @@ mail_config = get_config()['mail']
 
 mail_params = ['MAIL_USER', 'MAIL_PWD', 'MAIL_SERVER', 'MAIL_FROM']
 for attr in mail_params:
-    if mail_params not in mail_config:
+    if attr not in mail_config:
         raise ValueError('Mail configuration field <%s> not found' % attr)
 
 MAIL_USER = mail_config['MAIL_USER']
