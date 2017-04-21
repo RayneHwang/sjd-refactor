@@ -30,3 +30,6 @@ def register(args):
     db_session.commit()
     db_session.close()
     return 0
+
+def send_verify(mobile):
+    return True

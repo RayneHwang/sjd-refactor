@@ -8,6 +8,8 @@ from models.SJD_USER import SjdUser
 from utils.db_connection import get_session, engine
 from utils.return_json import error_json, succ_json
 
+from blueprints.user.services import register_service
+
 # Lei, HUANG: 17:41 15/04/2017
 # Flask defualt session implementation is client-side session
 # which is encrypted with app-screte key in config file
@@ -96,3 +98,11 @@ def db_status():
     :return:返回当前数据库连接池状态 
     """
     return engine.pool.status()
+
+
+@user_module.route('/send_verify', methods=['POST'])
+def send_verify():
+    mobile = request.form['mobile']
+
+    res = register_service.send_verify(mobile)
+    return error_json(0, res)
