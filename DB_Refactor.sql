@@ -33,3 +33,26 @@ INSERT INTO SJD_USER (id, username, password, realname, email, mobile, reg_time,
   SELECT id, username, password, realname, email, mobile, reg_time, reg_ip, last_login_time, last_login_ip, update_time, status, type, stu_school, department, major, student_id
   FROM sjd_ucenter_member;
 
+
+# YuKun Wang: 22:00 21/04/2017
+# 完善SJD_USER表字段
+alter table `SJD_USER` 
+add `nickname`			CHAR(32)				NOT NULL	DEFAULT ''		COMMENT '用户昵称',
+add `sex`				TINYINT(3)	UNSIGNED	NOT NULL	DEFAULT '0' 	COMMENT '用户性别',
+add `login`				INT(10) 				NOT NULL 	DEFAULT '0' 	COMMENT '登录次数',
+add `full_level` 		INT(3) 					NOT NULL 					COMMENT '用户等级',
+add `trust_score` 		INT(3) 					NOT NULL 					COMMENT '信任值',
+add `identification` 	INT(3)					NOT NULL 					COMMENT '用户身份',
+add `signature` 		TEXT					NOT NULL 					COMMENT '用户签名';
+
+# YuKun Wang: 22:05 21/04/2017
+# 将sjd_member, sjd_ucenter_member对应字段插入SJD_USER表
+update `SJD_USER`, `sjd_member`
+set `SJD_USER`.nickname = `sjd_member`.nickname, `SJD_USER`.sex = `sjd_member`.sex, `SJD_USER`.login = `sjd_member`.login, `SJD_USER`.signature = `sjd_member`.signature
+where `SJD_USER`.id = `sjd_member`.uid;
+update `SJD_USER`, `sjd_ucenter_member`
+set `SJD_USER`.full_level = `sjd_ucenter_member`.full_level, `SJD_USER`.trust_score = `sjd_ucenter_member`.trust_score, `SJD_USER`.identification = `sjd_ucenter_member`.identification
+where `SJD_USER`.id = `sjd_ucenter_member`.id;
+
+
+
