@@ -9,12 +9,12 @@ _HEADER = {
 }
 
 
-def send_sms(mobile, verifyCode):
+def send_sms(mobile, verify_code):
     """
     Lei, HUANG: 17:06 21/04/2017
     向短信网关发送短信
     :param mobile: 接收验证码的手机号码
-    :param verifyCode: 验证码
+    :param verify_code: 验证码
     :return:    若发送成功, 返回的第一个值为True, 第二个值为空字符串
                 若发送失败,则第一个值为False,第二个值为失败的具体信息
     """
@@ -22,7 +22,7 @@ def send_sms(mobile, verifyCode):
         'account': _SMS_CONFIG['username'],
         'password': _SMS_CONFIG['pwd'],
         'mobile': mobile,
-        'content': '您的验证码是：{code}。请不要把验证码泄露给其他人。'.format(code=verifyCode),
+        'content': '您的验证码是：{code}。请不要把验证码泄露给其他人。'.format(code=verify_code),
         'format': 'json'
     }
     req = request.Request(
@@ -34,7 +34,7 @@ def send_sms(mobile, verifyCode):
     response = request.urlopen(req)
     res_dict = simplejson.loads(response.read().decode())
     if 'code' in res_dict and res_dict['code'] == 2:
-        return True, verifyCode
+        return True, verify_code
     else:
         return False, res_dict['msg']
 

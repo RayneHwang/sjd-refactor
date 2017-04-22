@@ -37,6 +37,12 @@ def register(args):
 
 
 def send_verify(mobile):
+    """
+    Lei, HUANG: 23:24 21/04/2017
+    发送验证码的业务逻辑
+    :param mobile: 
+    :return: 
+    """
     s = '%06d' % random.randint(0, 1000000)
     # insert into redis
     r = get_redis_conn()
@@ -49,8 +55,9 @@ def send_verify(mobile):
 def check_verify(mobile, user_code):
     """
     Lei, HUANG: 21:51 21/04/2017
-    :param mobile: 
-    :param user_code: 
+    校验用户输入验证码的业务逻辑
+    :param mobile: 用户手机号码
+    :param user_code: 用户输入的验证码
     :return: 
     """
     r = get_redis_conn()

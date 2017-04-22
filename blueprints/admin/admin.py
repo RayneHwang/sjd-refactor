@@ -6,20 +6,20 @@ from utils import error
 from utils.db_connection import get_session
 from utils.return_json import return_json
 
-admin = Blueprint('admin', __name__, template_folder='templates')
+routes = Blueprint('admin', __name__, template_folder='templates')
 
 
-@admin.route('/')
+@routes.route('/')
 def index():
     return render_template('admin/index.html')
 
 
-@admin.route('/<page>')
+@routes.route('/<page>')
 def show(page):
     return render_template('admin/%s.html' % page)
 
 
-@admin.route('/json/')
+@routes.route('/json/')
 def jsonres():
     userid = request.args.get('userid')
 

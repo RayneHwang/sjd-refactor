@@ -1,14 +1,13 @@
+import logging
 import random
 
-import logging
 from flask import Blueprint, session, request
 
-from blueprints.user.services import register_service, login_service
+from blueprints.user.services import login_service
+from blueprints.user.services import register_service
 from models.SJD_USER import SjdUser
 from utils.db_connection import get_session, engine
 from utils.return_json import error_json, succ_json
-
-from blueprints.user.services import register_service
 
 # Lei, HUANG: 17:41 15/04/2017
 # Flask defualt session implementation is client-side session
@@ -16,10 +15,10 @@ from blueprints.user.services import register_service
 # TODO Flask-Session uses multiple session-storafe interface
 
 
-user_module = Blueprint('user', __name__, template_folder='templates')
+routes = Blueprint('user', __name__, template_folder='templates')
 
 
-@user_module.route('/login', methods=['GET', 'POST'])
+@routes.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -27,9 +26,14 @@ def login():
 
         res = login_service.login(username, password)
 
-        if res == 0:
+        if res[0] == 0:
             session['username'] = username
-            return succ_json()
+
+            def mask_pass(i):
+                i.password = 'xxx'
+                return i
+
+            return succ_json(mask_pass(res[1]))
         else:
             return error_json(res[0], res[1])
     else:
@@ -42,7 +46,7 @@ def login():
     '''
 
 
-@user_module.route('/register', methods=['POST'])
+@routes.route('/register', methods=['POST'])
 def register():
     """
     Lei, HUANG: 09:44 16/04/2017
@@ -56,7 +60,7 @@ def register():
         return error_json('', res)
 
 
-@user_module.route('/status')
+@routes.route('/status')
 def status():
     """
     Lei, HUANG: 11:55 16/04/2017
@@ -72,7 +76,7 @@ def status():
         return 'not login'
 
 
-@user_module.route('/bm')
+@routes.route('/bm')
 def bm():
     """
     Lei, HUANG: 11:54 16/04/2017
@@ -91,7 +95,7 @@ def bm():
     return 'you are login in as'
 
 
-@user_module.route('/db')
+@routes.route('/db')
 def db_status():
     """
     Lei, HUANG: 11:53 16/04/2017
@@ -100,7 +104,7 @@ def db_status():
     return engine.pool.status()
 
 
-@user_module.route('/send_verify', methods=['POST'])
+@routes.route('/send_verify', methods=['POST'])
 def send_verify():
     """
     Lei, HUANG: 21:55 21/04/2017
@@ -117,7 +121,7 @@ def send_verify():
         return error_json(1, msg)
 
 
-@user_module.route('/check_verify', methods=['POST'])
+@routes.route('/check_verify', methods=['POST'])
 def check_verify():
     """
     Lei, HUANG: 21:54 21/04/2017

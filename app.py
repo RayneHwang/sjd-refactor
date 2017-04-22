@@ -6,13 +6,13 @@ import re
 from flask import Flask
 
 from blueprints.admin import admin
-from blueprints.user import user_actions
+from blueprints.user import user
 from utils.config import get_config
 
 app = Flask(__name__)
 app.config['EXPLAIN_TEMPLATE_LOADING'] = True
-app.register_blueprint(admin.admin, url_prefix='/admin')
-app.register_blueprint(user_actions.user_module, url_prefix='/user')
+app.register_blueprint(admin.routes, url_prefix='/admin')
+app.register_blueprint(user.routes, url_prefix='/user')
 
 
 @app.route('/')

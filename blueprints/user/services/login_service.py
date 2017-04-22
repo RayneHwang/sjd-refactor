@@ -18,4 +18,4 @@ def login(username, password):
         if registered_user.password != encode(password):
             return ERR_PASSWORD, 'Password Error'
         else:
-            return 0
+            return 0,registered_user
