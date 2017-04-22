@@ -47,6 +47,7 @@ INSERT INTO SJD_USER (`ID`,
                       `TYPE`,
                       `SCHOOL`,
                       `DEPARTMENT`,
+                      `MAJOR`,
                       `STUDENT_ID`)
   SELECT
     um.id,
@@ -62,6 +63,7 @@ INSERT INTO SJD_USER (`ID`,
     um.type,
     um.stu_school,
     um.department,
+    um.major,
     um.student_id
 
   FROM sjd_ucenter_member um, sjd_member m
