@@ -53,11 +53,11 @@ def register():
     用户注册接口
     :return: 注册成功返回
     """
-    res = register_service.register(request.form)
-    if res == 0:
+    res, msg = register_service.register(request.form.to_dict())
+    if res:
         return succ_json()
     else:
-        return error_json('', res)
+        return error_json(1, msg)
 
 
 @routes.route('/status')

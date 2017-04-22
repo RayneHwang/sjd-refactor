@@ -1,6 +1,6 @@
 from models.SJD_USER import SjdUser
 from utils.db_connection import get_session
-from utils.password_encode import encode
+from utils.password_utils import encode
 
 # 返回的错误代码
 ERR_NO_SUCH_USER = 10
@@ -18,4 +18,4 @@ def login(username, password):
         if registered_user.password != encode(password):
             return ERR_PASSWORD, 'Password Error'
         else:
-            return 0,registered_user
+            return 0, registered_user
