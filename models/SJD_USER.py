@@ -15,14 +15,17 @@ class SjdUser(BASE):
     password = Column('PASSWORD', String(32))
     realname = Column('REALNAME', String(32))
     nickname = Column('NICKNAME', String(32))
+    avatar = Column('AVATAR', String(20))
     signature = Column('SIGNATURE', Text)
-    sex = Column('SEX', Integer)
-    birthday = Column('BIRTHDAY', Date)
+    wx_id = Column('WX_ID', String(30))
+    sex = Column('SEX', Integer, default=0)
+    birthday = Column('BIRTHDAY', Date, default=datetime.date(1912, 6, 23))
     mobile = Column('MOBILE', String(15))
-    status = Column('STATUS', Integer)
-    reg_type = Column('TYPE', Integer)
+    status = Column('STATUS', Integer, default=1)
+    reg_type = Column('TYPE', Integer, default=3)
     school = Column('SCHOOL', String(50))
     department = Column('DEPARTMENT', String(50))
+    major = Column('MAJOR', String(15))
     student_id = Column('STUDENT_ID', String(15))
 
     def __init__(self, username, password, **kwargs):
@@ -30,15 +33,17 @@ class SjdUser(BASE):
         self.password = password
         self.realname = kwargs.get('realname')
         self.nickname = kwargs.get('nickname')
+        self.avatar = kwargs.get('avatar')
         self.signature = kwargs.get('signature')
         self.sex = kwargs.get('sex')
+        self.wx_id = kwargs.get('wx_id')
         self.birthday = kwargs.get('birthday')
         self.mobile = kwargs.get('mobile')
         self.status = kwargs.get('status')
         self.reg_type = kwargs.get('reg_type')
         self.school = kwargs.get('school')
         self.department = kwargs.get('department')
-        self.student_id = kwargs.get('student_id ')
+        self.student_id = kwargs.get('student_id')
 
     def __repr__(self):
         return '<SJD_USER %s>' % self.id
