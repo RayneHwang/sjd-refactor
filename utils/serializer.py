@@ -24,34 +24,7 @@ class FlatObjectEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def __obj_to_json(obj):
+def obj_to_json(obj):
     """Simply convert flat SQLAlchemy objects into json"""
     return json.dumps(obj, cls=FlatObjectEncoder)
 
-
-def return_json(obj):
-    """return obj as"""
-    return Response(__obj_to_json(obj), mimetype='application/json')
-
-
-def error_json(code, msg):
-    """
-    Lei, HUANG: 23:19 21/04/2017
-    返回失败响应
-    :param code: 错误代码 
-    :param msg: 错误消息
-    :return: 
-    """
-    resp = {'status': 1, 'code': code, 'msg': msg}
-    return Response(__obj_to_json(resp), mimetype='application/json')
-
-
-def succ_json(msg=""):
-    """
-    Lei, HUANG: 23:20 21/04/2017
-    返回成功响应    
-    :param msg: 成功消息
-    :return: 
-    """
-    resp = {'status': 0, 'msg': msg}
-    return Response(__obj_to_json(resp), mimetype='application/json')
