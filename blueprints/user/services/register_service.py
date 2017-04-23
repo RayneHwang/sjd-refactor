@@ -6,8 +6,8 @@ from utils import password_utils
 from utils.sms_gateway import send_sms
 from utils.redis_conn import get_redis_conn
 from utils.config import get_config
-from  utils.password_utils import check_password
-from utils.return_json import error_json, succ_json
+from utils.password_utils import check_password
+from utils.db_connection import DbSession
 
 _DEFAULT_AVATAR = get_config()['avatar_dir'] + '/default.jpg'
 
@@ -26,7 +26,7 @@ def register(args):
 
     check_res, msg = check_reg_params(args)
     if not check_res:
-        return False,msg
+        return False, msg
 
     user = SjdUser(username=args.get('mobile'),  # 用户名即手机号码
                    password=password_utils.encode(args.get('password')),
@@ -44,11 +44,26 @@ def register(args):
                    major=args.get('major'),
                    student_id=args.get('student_id')
                    )
-    db_session = get_session()
-    db_session.add(user)
-    db_session.commit()
-    db_session.close()
-    return True,None
+    with DbSession() as db_session:
+        db_session.add(user)
+        db_session.commit()
+    return True, None
+
+
+def is_user_exists(username):
+    with DbSession() as session:
+        query = session.query(SjdUser)
+        print(query)
+        filtered = query.filter(SjdUser.username == username)
+        print(filtered)
+        scal = filtered.scalar
+        print(scal)
+        user = scal()
+        print(user)
+    if user is None:
+        return False
+    else:
+        return True
 
 
 def check_reg_params(kwargs):
@@ -88,9 +103,10 @@ def check_verify(mobile, user_code):
     :return: 
     """
     r = get_redis_conn()
-    code_in_redis = r.get(mobile).decode("utf-8")
-    if code_in_redis == user_code:
-        r.delete(mobile)
-        return True
-    else:
-        return False
+    code_in_redis = r.get(mobile)
+    if code_in_redis is not None:
+        code_in_redis = code_in_redis.decode("utf-8")
+        if code_in_redis == user_code:
+            r.delete(mobile)
+            return True
+    return False

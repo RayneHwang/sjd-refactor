@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template, request
-from sqlalchemy.orm.exc import NoResultFound
 
-from models.SJD_UCENTER_MEMBER import SjdUcenterMember
-from utils import error
-from utils.db_connection import get_session
-from utils.return_json import return_json
+from models.SJD_USER import SjdUser
+from utils.db_connection import DbSession
+from utils.errors.parameter_errors import BadRequest
+from utils.errors.success import succ_json
 
 routes = Blueprint('admin', __name__, template_folder='templates')
 
@@ -23,18 +22,12 @@ def show(page):
 def jsonres():
     userid = request.args.get('userid')
 
-    dbsession = get_session()
-
-    print('\n\33[32m session object:%s\n\33[37m' % dbsession)
-    try:
+    with DbSession() as dbsession:
+        print('\n\33[32m session object:%s\n\33[37m' % dbsession)
         if userid == '':
-            user = dbsession.query(SjdUcenterMember).all()
+            user = dbsession.query(SjdUser).all()
         else:
-            user = dbsession.query(SjdUcenterMember).filter(SjdUcenterMember.id == userid).one()
-
-    except NoResultFound:
-        return return_json(error.NoResErr().toDict())
-    finally:
-        # 一定要记得关闭session, 否则有会导致连接池溢出
-        dbsession.close()
-    return return_json(user)
+            user = dbsession.query(SjdUser).filter(SjdUser.id == userid).scalar()
+            if user is None:
+                raise BadRequest(code=1, msg='no such user')
+        return succ_json(user)

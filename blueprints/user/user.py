@@ -2,18 +2,19 @@ import logging
 import random
 
 from flask import Blueprint, session, request
+from sqlalchemy.orm.exc import NoResultFound
 
 from blueprints.user.services import login_service
 from blueprints.user.services import register_service
 from models.SJD_USER import SjdUser
-from utils.db_connection import get_session, engine
-from utils.return_json import error_json, succ_json
+from utils.db_connection import get_session, engine, DbSession
 
 # Lei, HUANG: 17:41 15/04/2017
 # Flask defualt session implementation is client-side session
 # which is encrypted with app-screte key in config file
 # TODO Flask-Session uses multiple session-storafe interface
-
+from utils.errors.parameter_errors import BadRequest
+from utils.errors.success import succ_json
 
 routes = Blueprint('user', __name__, template_folder='templates')
 
@@ -35,7 +36,7 @@ def login():
 
             return succ_json(mask_pass(res[1]))
         else:
-            return error_json(res[0], res[1])
+            raise BadRequest(code=res[0], msg=res[1])
     else:
         return '''
         <form action="" method="POST">
@@ -57,7 +58,16 @@ def register():
     if res:
         return succ_json()
     else:
-        return error_json(1, msg)
+        raise BadRequest(code=1, msg=msg)
+
+
+@routes.route('/check_username')
+def check_username():
+    res = register_service.is_user_exists(username=request.args.get('username'))
+    if res:
+        return BadRequest(code=1, msg='手机号码已注册')
+    else:
+        return succ_json()
 
 
 @routes.route('/status')
@@ -67,11 +77,10 @@ def status():
     :return: 查询当前登录用户 
     """
     if 'username' in session:
-        db_session = get_session()
-        user = db_session.query(SjdUser).filter(SjdUser.username == session['username']).one()
-        db_session.close()
-        print(user)
-        return 'you are login in as %s' % user.realname
+        with DbSession() as db_session:
+            user = db_session.query(SjdUser).filter(SjdUser.username == session['username']).one()
+            print(user)
+            return 'you are login in as %s' % user.realname
     else:
         return 'not login'
 
@@ -83,16 +92,14 @@ def bm():
     测试数据库并发查询
     """
     userid = random.randint(4000, 4379)
-    db_session = get_session()
     try:
-        user = db_session.query(SjdUser).filter(SjdUser.id == userid).one()
-        print(user)
+        with DbSession() as db_session:
+            user = db_session.query(SjdUser).filter(SjdUser.id == userid).one()
+            print(user)
+            return succ_json(user.id)
     except Exception as e:
         logging.exception(e)
-    finally:
-        pass
-        db_session.close()
-    return 'you are login in as'
+        raise BadRequest(1, 'Ro result found')
 
 
 @routes.route('/db')
@@ -113,12 +120,12 @@ def send_verify():
     """
     mobile = request.form.get('mobile')
     if mobile is None:
-        return error_json(1, '手机号码不能为空')
+        raise BadRequest(code=1, msg='手机号码不能为空')
     flag, msg = register_service.send_verify(mobile)
     if flag:
         return succ_json()
     else:
-        return error_json(1, msg)
+        raise BadRequest(1, msg)
 
 
 @routes.route('/check_verify', methods=['POST'])
@@ -131,10 +138,10 @@ def check_verify():
     mobile = request.form.get('mobile')
     verify_code = request.form.get('verify_code')
     if mobile is None or verify_code is None:
-        return error_json(1, '手机号码或验证码不能为空')
+        raise BadRequest(1, '手机号码或验证码不能为空')
     else:
         flag = register_service.check_verify(mobile, verify_code)
         if flag:
             return succ_json()
         else:
-            return error_json(1, '验证码输入错误')
+            raise BadRequest(1, '验证码输入错误')

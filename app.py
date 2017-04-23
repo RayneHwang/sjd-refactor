@@ -2,12 +2,17 @@
 import os
 import platform
 import re
+import traceback
 
-from flask import Flask
+from flask import Flask, Response
 
 from blueprints.admin import admin
 from blueprints.user import user
 from utils.config import get_config
+from utils.errors.base_error import BaseError
+from utils.errors.parameter_errors import BadRequest
+from utils.serializer import obj_to_json
+from utils.errors.success import succ_json
 
 app = Flask(__name__)
 app.config['EXPLAIN_TEMPLATE_LOADING'] = True
@@ -33,6 +38,18 @@ def index():
 def system():
     output = os.popen('cat /proc/cpuinfo')
     return output.read()
+
+
+@app.errorhandler(BaseError)
+def generic_error_handler(error):
+    """
+    Lei, HUANG: 15:47 23/04/2017
+    负责处理所有BaseError的异常子类
+    :param error: 
+    :return: 
+    """
+    response = obj_to_json(error.to_dict())
+    return Response(mimetype='application/json', status=error.status_code, response=response)
 
 
 if __name__ == '__main__':

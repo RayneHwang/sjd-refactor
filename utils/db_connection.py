@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.util import deprecated
+
 from utils.config import get_config
 
 _DATABASE_CONFIG = get_config()['database']
@@ -39,6 +41,22 @@ event.listen(engine, 'checkout', on_checkout)
 event.listen(engine, 'checkin', on_checkin)
 
 
+class DbSession:
+    def __init__(self):
+        self.db_session = _DB_SESSION_FACTORY()
+
+    def __enter__(self):
+        return self.db_session
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print('releasing session')
+        self.db_session.close()
+
+    def get_session(self):
+        return self.db_session
+
+
+@deprecated('1.0', message='使用DbSession代替')
 def get_session():
     """获取一个session实例, 完成操作后务必关闭"""
     session = _DB_SESSION_FACTORY()

@@ -1,5 +1,5 @@
 from models.SJD_USER import SjdUser
-from utils.db_connection import get_session
+from utils.db_connection import DbSession
 from utils.password_utils import encode
 
 # 返回的错误代码
@@ -8,9 +8,8 @@ ERR_PASSWORD = 11
 
 
 def login(username, password):
-    db_session = get_session()
-    registered_user = db_session.query(SjdUser).filter(SjdUser.username == username).first()
-    db_session.close()
+    with DbSession() as db_session:
+        registered_user = db_session.query(SjdUser).filter(SjdUser.username == username).first()
 
     if registered_user is None:
         return ERR_NO_SUCH_USER, 'No Such User'
