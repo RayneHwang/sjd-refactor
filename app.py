@@ -2,17 +2,15 @@
 import os
 import platform
 import re
-import traceback
 
 from flask import Flask, Response
 
 from blueprints.admin import admin
 from blueprints.user import user
 from utils.config import get_config
+from utils.db_connection import engine
 from utils.errors.base_error import BaseError
-from utils.errors.parameter_errors import BadRequest
 from utils.serializer import obj_to_json
-from utils.errors.success import succ_json
 
 app = Flask(__name__)
 app.config['EXPLAIN_TEMPLATE_LOADING'] = True
@@ -38,6 +36,15 @@ def index():
 def system():
     output = os.popen('cat /proc/cpuinfo')
     return output.read()
+
+
+@app.route('/db')
+def db_status():
+    """
+    Lei, HUANG: 11:53 16/04/2017
+    :return:返回当前数据库连接池状态 
+    """
+    return engine.pool.status()
 
 
 @app.errorhandler(BaseError)

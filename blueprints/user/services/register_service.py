@@ -51,6 +51,12 @@ def register(args):
 
 
 def is_user_exists(username):
+    """
+    Lei, HUANG: 17:11 23/04/2017
+    判断手机号是否已经注册过
+    :param username: 
+    :return: 
+    """
     with DbSession() as session:
         query = session.query(SjdUser)
         print(query)

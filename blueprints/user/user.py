@@ -14,7 +14,7 @@ from utils.db_connection import get_session, engine, DbSession
 # which is encrypted with app-screte key in config file
 # TODO Flask-Session uses multiple session-storafe interface
 from utils.errors.parameter_errors import BadRequest
-from utils.errors.success import succ_json
+from utils.errors.success import succ_json, return_json
 
 routes = Blueprint('user', __name__, template_folder='templates')
 
@@ -65,7 +65,7 @@ def register():
 def check_username():
     res = register_service.is_user_exists(username=request.args.get('username'))
     if res:
-        return BadRequest(code=1, msg='手机号码已注册')
+        return return_json(code=1)
     else:
         return succ_json()
 
@@ -102,15 +102,6 @@ def bm():
         raise BadRequest(1, 'Ro result found')
 
 
-@routes.route('/db')
-def db_status():
-    """
-    Lei, HUANG: 11:53 16/04/2017
-    :return:返回当前数据库连接池状态 
-    """
-    return engine.pool.status()
-
-
 @routes.route('/send_verify', methods=['POST'])
 def send_verify():
     """
@@ -121,6 +112,10 @@ def send_verify():
     mobile = request.form.get('mobile')
     if mobile is None:
         raise BadRequest(code=1, msg='手机号码不能为空')
+
+    if register_service.is_user_exists(mobile):
+        raise BadRequest(code=1, msg='该手机号码已经注册')
+
     flag, msg = register_service.send_verify(mobile)
     if flag:
         return succ_json()
