@@ -1,5 +1,6 @@
 -- Lei, HUANG: 17:30 22/04/2017
 -- 创建新的用户表
+DROP TABLE IF EXISTS SJD_EVENT;
 DROP TABLE IF EXISTS SJD_SHOT;
 DROP TABLE IF EXISTS SJD_PICTURES;
 DROP TABLE IF EXISTS SJD_USER_TRACK;
@@ -204,5 +205,46 @@ insert into SJD_SHOT(id, content, uid, create_time, view_count, cover_id, reply_
     from sjd_issue_content, SJD_USER, SJD_PICTURES
     where sjd_issue_content.uid = SJD_USER.id and sjd_issue_content.cover_id = SJD_PICTURES.id;
     
+# YuKun Wang, Feiyang Wang, 11:50  24/04/2017
+# 创建新的活动表
+CREATE TABLE `SJD_EVENT` (
+  `id`              INT(11) UNSIGNED NOT NULL AUTO_INCREMENT    COMMENT '活动ID',
+  `uid`        		INT(10) UNSIGNED NOT NULL                   COMMENT '发布者ID',
+  `title`        	VARCHAR(255) 	 NOT NULL                   COMMENT '活动标题',
+  `content`         TEXT   			 NOT NULL                   COMMENT '活动内容',
+  `sTime`        	INT(11)          NOT NULL                   COMMENT '活动开始时间',
+  `eTime`        	INT(11)          NOT NULL                   COMMENT '活动结束时间',
+  `address`    	    VARCHAR(255)     NOT NULL                   COMMENT '活动地点',
+  `create_time`     INT(11)          NOT NULL 			        COMMENT '发布时间',
+  `maxCount`        INT(11)          NOT NULL 			        COMMENT '活动最大报名人数',
+  `cover_id`        INT(11) UNSIGNED NOT NULL                   COMMENT '封面ID',
+  `deadline`     	INT(11)          NOT NULL 					COMMENT '报名截止时间',  
+  `is_sign`			INT(3)		 	 NOT NULL           		COMMENT '是否需要报名',
+  `need_money`		INT(3)		 	 NOT NULL           		COMMENT '是否需要费用',
+  `classification`  INT(11)          NOT NULL 					COMMENT '活动分类',  
+  `status`     		INT(11)          NOT NULL 					COMMENT '状态',
+  `update_time`     INT(11)          NOT NULL 					COMMENT '更新时间',  
+  `view_count`  	INT(11)          NOT NULL 					COMMENT '浏览量',  
+  `remark_count`    INT(11)          NOT NULL 					COMMENT '评论数',  
+  `type_id`     	INT(11)          NOT NULL 					COMMENT '活动分类',  
+  `pass_count`     	INT(11)          NOT NULL 					COMMENT '审核通过人数',  
+  `sign_count`      INT(11)          NOT NULL 					COMMENT '报名人数',  
+  `rank_level`     	INT(3)           NOT NULL 					COMMENT '排名等级',  
+  `is_recommend`    TINYINT(4)       NOT NULL 					COMMENT '是否首页推荐',  
+  `tag`     	 	TEXT          	 NOT NULL 					COMMENT '活动标签',  
 
+   PRIMARY KEY (`id`),
+   CONSTRAINT FK_EVENT_UID FOREIGN KEY (`uid`) 
+   REFERENCES SJD_USER(`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+   CONSTRAINT FK_EVENT_COVER FOREIGN KEY (`cover_id`) 
+   REFERENCES SJD_PICTURES(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+)
+  DEFAULT CHARSET = utf8                  COMMENT = '活动表';
+  
+# YuKun Wang, Feiyang Wang, 11:50  24/04/2017
+# 旧活动表sjd_event数据导入SJD_EVENT
+insert into SJD_EVENT(id,uid,title,content,sTime,eTime,address,create_time,maxCount,cover_id,deadline,is_sign,need_money,classification,status,update_time,view_count,remark_count,type_id,pass_count,sign_count,rank_level,is_recommend,tag)
+	select sjd_event.id,sjd_event.uid,sjd_event.title,sjd_event.`explain`,sjd_event.sTime,sjd_event.eTime,sjd_event.address,sjd_event.create_time,sjd_event.limitCount,sjd_event.cover_id,sjd_event.deadline,sjd_event.is_sign,sjd_event.related_money,sjd_event.classification,sjd_event.`status`,sjd_event.update_time,sjd_event.view_count,sjd_event.reply_count,sjd_event.type_id,sjd_event.attentionCount,sjd_event.signCount,sjd_event.rank_level,sjd_event.is_recommend,sjd_event.biaoqian
+    from sjd_event, SJD_USER, SJD_PICTURES
+    where sjd_event.uid = SJD_USER.id and sjd_event.cover_id = SJD_PICTURES.id;
 
