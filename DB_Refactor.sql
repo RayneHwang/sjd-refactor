@@ -155,5 +155,28 @@ UPDATE SJD_USER SET WX_ID='o4q_jwAlGwVaLPX6XeKFEFGDrptw' WHERE ID=4089;
 UPDATE SJD_USER SET WX_ID='o4q_jwO4vBd24iZUn_rjlKfokOfw' WHERE ID=4244;
 UPDATE SJD_USER SET WX_ID='o4q_jwECWDmerqCCq3vG0_m0RmI8' WHERE ID=4364;
 
+# YuKun Wang: 21:43 22/04/2017
+# 创建新的随手拍表
+CREATE TABLE `SJD_SHOT` (
+  `id`              INT(11) UNSIGNED NOT NULL AUTO_INCREMENT    COMMENT '随手拍ID',
+  `content`         TEXT   			 NOT NULL                   COMMENT '随手拍内容',
+  `uid`        		INT(10) UNSIGNED NOT NULL                   COMMENT '发布者ID',
+  `create_time`     INT(11)          NOT NULL                   COMMENT '随手拍创建时间',
+  `view_count`      INT(11)          NOT NULL DEFAULT '0'       COMMENT '浏览量',
+  `cover_id`        INT(11)          NOT NULL                   COMMENT '封面ID',
+  `reply_count`     INT(11)          NOT NULL DEFAULT '0'       COMMENT '评论数',
+   PRIMARY KEY (`id`),
+   CONSTRAINT fk_shot_uid FOREIGN KEY (`uid`) 
+   REFERENCES SJD_USER(`ID`) ON DELETE CASCADE
+)
+  DEFAULT CHARSET = utf8                  COMMENT = '随手拍表';
+
+# YuKun Wang: 21:57 22/04/2017
+# 将sjd_issue_content内容导入新随手拍表SJD_SHOT
+insert into SJD_SHOT(id, content, uid, create_time, view_count, cover_id, reply_count)
+	select sjd_issue_content.id, sjd_issue_content.content, sjd_issue_content.uid, sjd_issue_content.create_time, sjd_issue_content.view_count, sjd_issue_content.cover_id, sjd_issue_content.reply_count 
+    from sjd_issue_content, SJD_USER 
+    where sjd_issue_content.uid = SJD_USER.id;
+    
 
 
