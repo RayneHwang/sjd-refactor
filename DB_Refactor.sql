@@ -6,23 +6,23 @@ DROP TABLE IF EXISTS SJD_PICTURES;
 DROP TABLE IF EXISTS SJD_USER_TRACK;
 DROP TABLE IF EXISTS SJD_USER;
 CREATE TABLE `SJD_USER` (
-  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `USERNAME` VARCHAR(32) NOT NULL COMMENT '用户名',
-  `PASSWORD` VARCHAR(32) NOT NULL COMMENT '密码',
-  `REALNAME` VARCHAR(32) COMMENT '真实姓名',
-  `NICKNAME` VARCHAR(32)  COMMENT '昵称',
-  `AVATAR`   VARCHAR(20) COMMENT '头像路径',
-  `SIGNATURE` text COMMENT '个性签名',
-  `WX_ID` VARCHAR(30) COMMENT '微信OpenID',
-  `SEX` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '性别, 0无可奉告1女2男',
-  `BIRTHDAY` date  DEFAULT '2016-10-10' COMMENT '生日',
-  `MOBILE` VARCHAR(15) NOT NULL COMMENT '用户手机',
-  `STATUS` tinyint(4) DEFAULT '0' COMMENT '用户状态',
-  `TYPE` tinyint(4) COMMENT '1为用户名注册，2为邮箱注册，3为手机注册',
-  `SCHOOL` VARCHAR(50)  COMMENT '学校信息',
-  `DEPARTMENT` VARCHAR(50) COMMENT '学院信息',
-  `MAJOR` VARCHAR(15) COMMENT  '专业',
-  `STUDENT_ID` VARCHAR(15),
+  `ID`        int(10) unsigned  NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `USERNAME`  VARCHAR(32)       NOT NULL                COMMENT '用户名',
+  `PASSWORD`  VARCHAR(32)       NOT NULL                COMMENT '密码',
+  `REALNAME`  VARCHAR(32)                               COMMENT '真实姓名',
+  `NICKNAME`  VARCHAR(32)                               COMMENT '昵称',
+  `AVATAR`    VARCHAR(20)                               COMMENT '头像路径',
+  `SIGNATURE` text                                      COMMENT '个性签名',
+  `WX_ID`     VARCHAR(30)                               COMMENT '微信OpenID',
+  `SEX`       tinyint(3) unsigned NOT NULL DEFAULT '0'  COMMENT '性别, 0无可奉告1女2男',
+  `BIRTHDAY`  date        DEFAULT '2016-10-10'          COMMENT '生日',
+  `MOBILE`    VARCHAR(15) NOT NULL                      COMMENT '用户手机',
+  `STATUS`    tinyint(4)  DEFAULT '0'                   COMMENT '用户状态',
+  `TYPE`      tinyint(4)                                COMMENT '1为用户名注册，2为邮箱注册，3为手机注册',
+  `SCHOOL`    VARCHAR(50)                               COMMENT '学校信息',
+  `DEPARTMENT` VARCHAR(50)                              COMMENT '学院信息',
+  `MAJOR`      VARCHAR(15)                              COMMENT  '专业',
+  `STUDENT_ID` VARCHAR(15)                              COMMENT '学号',
   PRIMARY KEY (`ID`),
   INDEX `NICKNAME` (`NICKNAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
@@ -163,88 +163,128 @@ UPDATE SJD_USER SET WX_ID='o4q_jwECWDmerqCCq3vG0_m0RmI8' WHERE ID=4364;
 # 创建图片封面表
 DROP TABLE IF EXISTS SJD_PICTURES;
 CREATE TABLE `SJD_PICTURES` (
-  `id`              INT(11) UNSIGNED NOT NULL AUTO_INCREMENT    COMMENT '图片ID',
-  `path`         	VARCHAR(255)   	 NOT NULL DEFAULT ''        COMMENT '图片路径',
-  `create_time`     INT(10) UNSIGNED NOT NULL DEFAULT '0'       COMMENT '创建时间',
-  `md5`     		CHAR(32)         NOT NULL DEFAULT ''        COMMENT '文件md5',
-  `sha1`     	    CHAR(40)         NOT NULL DEFAULT ''        COMMENT '文件sha1',
-   PRIMARY KEY (`id`)
-)
-  DEFAULT CHARSET = utf8                  COMMENT = '图片封面表';
+  `ID`              INT(11) UNSIGNED NOT NULL AUTO_INCREMENT    COMMENT '图片ID',
+  `PATH`         	  VARCHAR(255)   	 NOT NULL DEFAULT ''        COMMENT '图片路径',
+  `CREATE_TIME`     INT(10) UNSIGNED NOT NULL DEFAULT '0'       COMMENT '创建时间',
+  `MD5`     		    CHAR(32)         NOT NULL DEFAULT ''        COMMENT '文件md5',
+  `SHA1`     	      CHAR(40)         NOT NULL DEFAULT ''        COMMENT '文件sha1',
+   PRIMARY KEY (`ID`)
+)ENGINE=InnoDB DEFAULT CHARSET = utf8 COMMENT = '图片封面表';
 
 # YuKun Wang: 09:45 24/04/2017
 # 将sjd_picture内容导入新表SJD_PICTURES
-insert into SJD_PICTURES(id,path,create_time,md5,sha1)
-	select id,path,create_time,md5,sha1
-    from sjd_picture;
+INSERT INTO SJD_PICTURES(ID,PATH,CREATE_TIME,MD5,SHA1)
+	SELECT ID, PATH, CREATE_TIME, MD5,SHA1
+    FROM sjd_picture;
 
 # YuKun Wang: 09:40 24/04/2017
 # 创建新的随手拍表
 DROP TABLE IF EXISTS SJD_SHOT;
 CREATE TABLE `SJD_SHOT` (
-  `id`              INT(11) UNSIGNED NOT NULL AUTO_INCREMENT    COMMENT '随手拍ID',
-  `content`         TEXT   			 NOT NULL                   COMMENT '随手拍内容',
-  `uid`        		INT(10) UNSIGNED NOT NULL                   COMMENT '发布者ID',
-  `create_time`     INT(11)          NOT NULL                   COMMENT '随手拍创建时间',
-  `view_count`      INT(11)          NOT NULL DEFAULT '0'       COMMENT '浏览量',
-  `cover_id`        INT(11) UNSIGNED NOT NULL                   COMMENT '封面ID',
-  `reply_count`     INT(11)          NOT NULL DEFAULT '0'       COMMENT '评论数',
-  `status`			TINYINT(11)		 NOT NULL DEFAULT '1'		COMMENT '状态',
-   PRIMARY KEY (`id`),
-   CONSTRAINT FK_SHOT_UID FOREIGN KEY (`uid`) 
-   REFERENCES SJD_USER(`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-   CONSTRAINT FK_SHOT_COVER FOREIGN KEY (`cover_id`) 
-   REFERENCES SJD_PICTURES(`id`) ON DELETE CASCADE ON UPDATE CASCADE
-)
-  DEFAULT CHARSET = utf8                  COMMENT = '随手拍表';
+  `ID`              INT(11) UNSIGNED  NOT NULL AUTO_INCREMENT    COMMENT '随手拍ID',
+  `CONTENT`         TEXT   			      NOT NULL                   COMMENT '随手拍内容',
+  `UID`        		  INT(10) UNSIGNED  NOT NULL                   COMMENT '发布者ID',
+  `CREATE_TIME`     INT(11)           NOT NULL                   COMMENT '随手拍创建时间',
+  `VIEW_COUNT`      INT(11)           NOT NULL DEFAULT '0'       COMMENT '浏览量',
+  `COVER_ID`        INT(11) UNSIGNED  NOT NULL                   COMMENT '封面ID',
+  `REPLY_COUNT`     INT(11)           NOT NULL DEFAULT '0'       COMMENT '评论数',
+  `STATUS`			TINYINT(11)		        NOT NULL DEFAULT '1'		   COMMENT '状态',
+   PRIMARY KEY (`ID`),
+   CONSTRAINT FK_SHOT_UID FOREIGN KEY (`UID`) REFERENCES SJD_USER(`ID`)
+     ON DELETE CASCADE
+     ON UPDATE CASCADE,
+   CONSTRAINT FK_SHOT_COVER FOREIGN KEY (`COVER_ID`)REFERENCES SJD_PICTURES(`ID`)
+     ON DELETE CASCADE
+     ON UPDATE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET = utf8 COMMENT = '随手拍表';
 
 # YuKun Wang: 21:57 22/04/2017
 # 将sjd_issue_content内容导入新随手拍表SJD_SHOT
-insert into SJD_SHOT(id, content, uid, create_time, view_count, cover_id, reply_count, status)
-	select sjd_issue_content.id, sjd_issue_content.content, sjd_issue_content.uid, sjd_issue_content.create_time, sjd_issue_content.view_count, sjd_issue_content.cover_id, sjd_issue_content.reply_count, sjd_issue_content.status
-    from sjd_issue_content, SJD_USER, SJD_PICTURES
-    where sjd_issue_content.uid = SJD_USER.id and sjd_issue_content.cover_id = SJD_PICTURES.id;
-    
+INSERT INTO SJD_SHOT (ID, CONTENT, UID, CREATE_TIME, VIEW_COUNT, COVER_ID, REPLY_COUNT, STATUS)
+  SELECT
+    sjd_issue_content.ID,
+    sjd_issue_content.CONTENT,
+    sjd_issue_content.UID,
+    sjd_issue_content.CREATE_TIME,
+    sjd_issue_content.VIEW_COUNT,
+    sjd_issue_content.COVER_ID,
+    sjd_issue_content.REPLY_COUNT,
+    sjd_issue_content.STATUS
+  FROM sjd_issue_content, SJD_USER, SJD_PICTURES
+  WHERE     sjd_issue_content.UID = SJD_USER.ID
+        AND sjd_issue_content.COVER_ID = SJD_PICTURES.ID;
+
 # YuKun Wang, Feiyang Wang, 11:50  24/04/2017
 # 创建新的活动表
+DROP TABLE IF EXISTS SJD_EVENT;
+ALTER TABLE sjd_event RENAME TO sjd_event_old;
 CREATE TABLE `SJD_EVENT` (
-  `id`              INT(11) UNSIGNED NOT NULL AUTO_INCREMENT    COMMENT '活动ID',
-  `uid`        		INT(10) UNSIGNED NOT NULL                   COMMENT '发布者ID',
-  `title`        	VARCHAR(255) 	 NOT NULL                   COMMENT '活动标题',
-  `content`         TEXT   			 NOT NULL                   COMMENT '活动内容',
-  `sTime`        	INT(11)          NOT NULL                   COMMENT '活动开始时间',
-  `eTime`        	INT(11)          NOT NULL                   COMMENT '活动结束时间',
-  `address`    	    VARCHAR(255)     NOT NULL                   COMMENT '活动地点',
-  `create_time`     INT(11)          NOT NULL 			        COMMENT '发布时间',
-  `maxCount`        INT(11)          NOT NULL 			        COMMENT '活动最大报名人数',
-  `cover_id`        INT(11) UNSIGNED NOT NULL                   COMMENT '封面ID',
-  `deadline`     	INT(11)          NOT NULL 					COMMENT '报名截止时间',  
-  `is_sign`			INT(3)		 	 NOT NULL           		COMMENT '是否需要报名',
-  `need_money`		INT(3)		 	 NOT NULL           		COMMENT '是否需要费用',
-  `classification`  INT(11)          NOT NULL 					COMMENT '活动分类',  
-  `status`     		INT(11)          NOT NULL 					COMMENT '状态',
-  `update_time`     INT(11)          NOT NULL 					COMMENT '更新时间',  
-  `view_count`  	INT(11)          NOT NULL 					COMMENT '浏览量',  
-  `remark_count`    INT(11)          NOT NULL 					COMMENT '评论数',  
-  `type_id`     	INT(11)          NOT NULL 					COMMENT '活动分类',  
-  `pass_count`     	INT(11)          NOT NULL 					COMMENT '审核通过人数',  
-  `sign_count`      INT(11)          NOT NULL 					COMMENT '报名人数',  
-  `rank_level`     	INT(3)           NOT NULL 					COMMENT '排名等级',  
-  `is_recommend`    TINYINT(4)       NOT NULL 					COMMENT '是否首页推荐',  
-  `tag`     	 	TEXT          	 NOT NULL 					COMMENT '活动标签',  
+  `ID`              INT(11) UNSIGNED  NOT NULL AUTO_INCREMENT     COMMENT '活动ID',
+  `UID`        		  INT(10) UNSIGNED  NOT NULL                    COMMENT '发布者ID',
+  `TITLE`        	  VARCHAR(255) 	    NOT NULL                    COMMENT '活动标题',
+  `CONTENT`         TEXT   			      NOT NULL                    COMMENT '活动内容',
+  `STIME`        	  INT(11)           NOT NULL                    COMMENT '活动开始时间',
+  `ETIME`        	  INT(11)           NOT NULL                    COMMENT '活动结束时间',
+  `ADDRESS`    	    VARCHAR(255)      NOT NULL                    COMMENT '活动地点',
+  `CREATE_TIME`     INT(11)           NOT NULL 			              COMMENT '发布时间',
+  `MAXCOUNT`        INT(11)           NOT NULL 			              COMMENT '活动最大报名人数',
+  `COVER_ID`        INT(11) UNSIGNED  NOT NULL                    COMMENT '封面ID',
+  `DEADLINE`     	  INT(11)           NOT NULL 					          COMMENT '报名截止时间',
+  `IS_SIGN`			    INT(3)		 	      NOT NULL                    COMMENT '是否需要报名',
+  `NEED_MONEY`		  INT(3)		 	      NOT NULL                    COMMENT '是否需要费用',
+  `CLASSIFICATION`  INT(11)           NOT NULL 					          COMMENT '活动分类',
+  `STATUS`     		  INT(11)           NOT NULL 					          COMMENT '状态',
+  `UPDATE_TIME`     INT(11)           NOT NULL 					          COMMENT '更新时间',
+  `VIEW_COUNT`  	  INT(11)           NOT NULL 					          COMMENT '浏览量',
+  `REMARK_COUNT`    INT(11)           NOT NULL 					          COMMENT '评论数',
+  `TYPE_ID`     	  INT(11)           NOT NULL 					          COMMENT '活动分类',
+  `PASS_COUNT`     	INT(11)           NOT NULL 					          COMMENT '审核通过人数',
+  `SIGN_COUNT`      INT(11)           NOT NULL 					          COMMENT '报名人数',
+  `RANK_LEVEL`     	INT(3)            NOT NULL 					          COMMENT '排名等级',
+  `IS_RECOMMEND`    TINYINT(4)        NOT NULL 					          COMMENT '是否首页推荐',
+  `TAG`     	 	    TEXT          	  NOT NULL 					          COMMENT '活动标签',
 
-   PRIMARY KEY (`id`),
-   CONSTRAINT FK_EVENT_UID FOREIGN KEY (`uid`) 
-   REFERENCES SJD_USER(`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-   CONSTRAINT FK_EVENT_COVER FOREIGN KEY (`cover_id`) 
-   REFERENCES SJD_PICTURES(`id`) ON DELETE CASCADE ON UPDATE CASCADE
-)
-  DEFAULT CHARSET = utf8                  COMMENT = '活动表';
+   PRIMARY KEY (`ID`),
+   CONSTRAINT FK_EVENT_UID FOREIGN KEY (`UID`) REFERENCES SJD_USER(`ID`)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
+   CONSTRAINT FK_EVENT_COVER FOREIGN KEY (`COVER_ID`) REFERENCES SJD_PICTURES(`ID`)
+     ON DELETE CASCADE
+     ON UPDATE CASCADE
+)ENGINE=InnoDB  DEFAULT CHARSET = utf8 COMMENT = '活动表';
   
 # YuKun Wang, Feiyang Wang, 11:50  24/04/2017
 # 旧活动表sjd_event数据导入SJD_EVENT
-insert into SJD_EVENT(id,uid,title,content,sTime,eTime,address,create_time,maxCount,cover_id,deadline,is_sign,need_money,classification,status,update_time,view_count,remark_count,type_id,pass_count,sign_count,rank_level,is_recommend,tag)
-	select sjd_event.id,sjd_event.uid,sjd_event.title,sjd_event.`explain`,sjd_event.sTime,sjd_event.eTime,sjd_event.address,sjd_event.create_time,sjd_event.limitCount,sjd_event.cover_id,sjd_event.deadline,sjd_event.is_sign,sjd_event.related_money,sjd_event.classification,sjd_event.`status`,sjd_event.update_time,sjd_event.view_count,sjd_event.reply_count,sjd_event.type_id,sjd_event.attentionCount,sjd_event.signCount,sjd_event.rank_level,sjd_event.is_recommend,sjd_event.biaoqian
-    from sjd_event, SJD_USER, SJD_PICTURES
-    where sjd_event.uid = SJD_USER.id and sjd_event.cover_id = SJD_PICTURES.id;
+# 如果新表名和旧表名冲突, 把旧表名加上后缀_old
+ALTER TABLE sjd_event RENAME TO sjd_event_old;
+
+INSERT INTO SJD_EVENT (ID, UID, TITLE, CONTENT, STIME, ETIME, ADDRESS, CREATE_TIME, MAXCOUNT, COVER_ID, DEADLINE, IS_SIGN, NEED_MONEY, CLASSIFICATION, STATUS, UPDATE_TIME, VIEW_COUNT, REMARK_COUNT, TYPE_ID, PASS_COUNT, SIGN_COUNT, RANK_LEVEL, IS_RECOMMEND, TAG)
+  SELECT
+    sjd_event_old.id,
+    sjd_event_old.uid,
+    sjd_event_old.title,
+    sjd_event_old.`explain`,
+    sjd_event_old.sTime,
+    sjd_event_old.eTime,
+    sjd_event_old.address,
+    sjd_event_old.create_time,
+    sjd_event_old.limitCount,
+    sjd_event_old.cover_id,
+    sjd_event_old.deadline,
+    sjd_event_old.is_sign,
+    sjd_event_old.related_money,
+    sjd_event_old.classification,
+    sjd_event_old.`status`,
+    sjd_event_old.update_time,
+    sjd_event_old.view_count,
+    sjd_event_old.reply_count,
+    sjd_event_old.type_id,
+    sjd_event_old.attentionCount,
+    sjd_event_old.signCount,
+    sjd_event_old.rank_level,
+    sjd_event_old.is_recommend,
+    sjd_event_old.biaoqian
+  FROM sjd_event_old, SJD_USER, SJD_PICTURES
+  WHERE sjd_event_old.uid = SJD_USER.id AND sjd_event_old.cover_id = SJD_PICTURES.id;
+
 
